@@ -668,12 +668,15 @@ class Project():
 
         # setuptools-like ARCHFLAGS environment variable support
         if sysconfig.get_platform().startswith('macosx-'):
+            print(f'{sysconfig.get_platform()=}, checking for archflags')
             archflags = self._env.get('ARCHFLAGS')
+            print(f'{archflags=}')
             if archflags is not None:
                 arch, *other = filter(None, (x.strip() for x in archflags.split('-arch')))
                 if other:
                     raise ConfigError(f'Multi-architecture builds are not supported but $ARCHFLAGS={archflags!r}')
                 macver, _, nativearch = platform.mac_ver()
+                print(f'{arch=}, {nativearch=}')
                 if arch != nativearch:
                     x = self._env.setdefault('_PYTHON_HOST_PLATFORM', f'macosx-{macver}-{arch}')
                     if not x.endswith(arch):
